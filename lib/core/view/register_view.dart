@@ -4,26 +4,20 @@ import 'package:provider/provider.dart';
 import 'package:shopping_list_app/constants/app_buttons.dart';
 import 'package:shopping_list_app/constants/constants.dart';
 import 'package:shopping_list_app/core/model/user_model.dart';
-import 'package:shopping_list_app/core/view/register_view.dart';
 import 'package:shopping_list_app/core/viewmodel/user-view-model.dart';
 
 
-class SigninPage extends StatefulWidget {
-  
 
-  void _misafirGirisi(BuildContext context) async {
-    final _userViewModel = Provider.of<UserViewModel>(context, listen:false);
-    UserModel? _user = await _userViewModel.signInAnonymously();
-    print("Giris yapan kullanici id:${_user?.userID.toString()}");
-    }
+class RegisterPage extends StatefulWidget {
+
 
   @override
-  _SigninPageState createState() => _SigninPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _SigninPageState extends State<SigninPage> {
+class _RegisterPageState extends State<RegisterPage> {
   static GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +29,12 @@ class _SigninPageState extends State<SigninPage> {
   final _userViewModel = Provider.of<UserViewModel>(context,listen:false);
   
 
-  _formSubmit() async{
+  _formSubmit() async {
     _formKey.currentState!.save();
     debugPrint("email:"+_email!+"Şifre:"+ _password!);
-    
-    UserModel? girisYapanUser = await _userViewModel.signInWithEmailAndPassword(_email!, _password!); //viewmodel user model'a cevrildi
-    if(girisYapanUser!=null){
-      print("Giris Yapan User Email: "+_email!+"Şifre:"+_password!);
+    UserModel? kaydolanUser = await _userViewModel.createUserWithEmailAndPassword(_email!, _password!); //viewmodel user model'a cevrildi
+    if(kaydolanUser!=null){
+      print("Kaydolan User Email: "+_email!+"Şifre:"+_password!);
     }else{
 
     }
@@ -49,7 +42,7 @@ class _SigninPageState extends State<SigninPage> {
 
 
   return Scaffold(
-    body: _userViewModel.state == ViewState.Idle ? SingleChildScrollView(
+    body:SingleChildScrollView(
       child:Container(
         height: h,
         width: w,
@@ -69,19 +62,20 @@ class _SigninPageState extends State<SigninPage> {
             children: [
                 Padding(
                   padding: EdgeInsets.only(top:h/8),
-                  child: Text("Giriş Yap",style:TextStyle(fontSize: 36)),
+                  child: Text("Üyelik Formu",style:TextStyle(fontSize: 36)),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top:h/10.0, bottom:h/20,left:w/10,right:w/10),
+                  padding: EdgeInsets.only(top:h/10.0, bottom:h/30,left:w/10,right:w/10),
                   child: TextFormField(
                       onSaved: (String? eval){
                         _email = eval;
                       },
+                      
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration( 
                       prefixIcon: Icon(Icons.mail),
                       hintText: "Email",
-                      errorText: _userViewModel.emailErrorMessage != null ? _userViewModel.emailErrorMessage: null, 
+                      errorText: _userViewModel.emailErrorMessage != null ? _userViewModel.emailErrorMessage: null, //hata mesajı varsa goster, yoksa null'la sifirla
                       filled: true, 
                       fillColor: Colors.white,
                       focusedBorder: OutlineInputBorder(//textfield tiklaninca
@@ -124,55 +118,33 @@ class _SigninPageState extends State<SigninPage> {
                   ),
                 ),
                 AppButtons(       //Oturum ac butonu
-                    buttonText: "OTURUM AÇ",
+                    buttonText: "KAYDOL",
                     buttonColor: pDarkest,
                     textSize: 20,
                     textColor: pLight,
                     onPressed: ()=> _formSubmit(),
                  ),
                  Padding(
-                   padding: EdgeInsets.only(top:h/15),
+                   padding: const EdgeInsets.only(top:30.0),
                    child: GestureDetector(  
                     onTap:(){      
-                        Navigator.push(context,MaterialPageRoute(builder: (context)=>RegisterPage()));
+                      Navigator.pop(context);
                     },
-                    child: Text("Üye ol",  
+                    child: Text("Giriş Sayfasına Dön",  
                     style:TextStyle(
                       color: pDarkest,
-                      fontSize:25,
+                      fontSize:20,
                       decoration: TextDecoration.underline
                       )
                     ),
                     ),
                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: GestureDetector(  //Misafir girisi
-                    onTap:(){      
-                       widget._misafirGirisi(context);
-                    },
-                    child: Text("Misafir girişi",  
-                    style:TextStyle(
-                      color: pDarkest,
-                      fontSize:25,
-                      decoration: TextDecoration.underline
-                      )
-                    ),
-                    ),
-                  )
-  
             ],
           ),
         ),
       ) ,
     )
-    :Center(child: CircularProgressIndicator(),     //busy durumundaysa circular kullan
-    )
   );
-
-  
-
-  
   }
 }
 

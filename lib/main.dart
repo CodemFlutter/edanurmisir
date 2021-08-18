@@ -17,15 +17,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Shopping List App',
-      theme: ThemeData(
-        primaryColor: pMain,
-      ),
-      home: ChangeNotifierProvider(
-        child: LandingPage(),
-        create: (context)=> UserViewModel(),      //widget tree'ye viewmodel entegre edilmis oldu
+    return ChangeNotifierProvider(
+      create: (context)=> UserViewModel(), 
+      child: MaterialApp(
+        title: 'Shopping List App',
+        theme: ThemeData(
+          primaryColor: pMain,
         ),
+          home: LandingPage(),         
+      ),
     );
   }
 }

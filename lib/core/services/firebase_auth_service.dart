@@ -24,7 +24,7 @@ class FirebaseAuthService implements AuthBase{
   UserModel? _userFromFirebase(User? user){
     if(user == null)                      //firebase'den gelen user null ise 
       return null;                        //usermodel'daki user'i da null'a esitle
-    return UserModel(userID: user.uid);   //null degilse usermodel'daki user'a gelen degeri ata
+    return UserModel(userID: user.uid,email: user.email);   //null degilse usermodel'daki user'a gelen degeri ata
   }
 
   @override
@@ -49,5 +49,27 @@ class FirebaseAuthService implements AuthBase{
         return false;
       }
     }
+
+  @override
+  Future<UserModel?> createUserWithEmailAndPassword(String email, String password) async {
+    try{
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+      return _userFromFirebase(userCredential.user);
+    }catch(e){
+      print("CREATE USER ERROR:"+e.toString());
+      return null;
+    }
+  }
+
+  @override
+  Future<UserModel?> signInWithEmailAndPassword(String email, String password) async {
+    try{
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+      return _userFromFirebase(userCredential.user);
+    }catch(e){
+      print("USER SIGN IN ERROR:"+e.toString());
+      return null;
+    }
+  }
     
   }

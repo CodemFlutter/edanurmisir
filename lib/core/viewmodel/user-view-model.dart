@@ -12,6 +12,9 @@ class UserViewModel with ChangeNotifier implements AuthBase{   //mixin
   ViewState _state = ViewState.Idle;      //baslangicta user bosta 
   UserRepository _userRepository = locator<UserRepository>();
   UserModel? _user;
+  String? emailErrorMessage;
+  String? passwordErrorMessage;
+
 
   UserModel? get user => _user;
   ViewState get state=> _state;
@@ -66,6 +69,60 @@ class UserViewModel with ChangeNotifier implements AuthBase{   //mixin
     }finally{
       state = ViewState.Idle;       //her islem sonunda idle olarak guncellenir
     }
+  }
+
+  @override
+  Future<UserModel?> createUserWithEmailAndPassword(String email, String password) async {
+    try{
+
+      if(_emailPasswordCheck(email, password)){                                               //email ve password gecerliyse busy
+          state = ViewState.Busy;
+          _user = await _userRepository.createUserWithEmailAndPassword(email, password);
+        return _user;
+      }else {
+        return null;
+      }
+
+    }catch(e){
+      debugPrint("Kullanici alinamadi"+ e.toString());
+      return null;
+    }finally{
+      state = ViewState.Idle;       //her islem sonunda idle olarak guncellenir
+    }
+  }
+
+  @override
+  Future<UserModel?> signInWithEmailAndPassword(String email, String password) async{
+    try{
+
+      if(_emailPasswordCheck(email, password)){
+        state = ViewState.Busy;
+        _user = await _userRepository.signInWithEmailAndPassword(email, password);
+        return _user;
+      }else return null;
+    }catch(e){
+      debugPrint("Kullanici alinamadi"+ e.toString());
+      return null;
+    }finally{
+      state = ViewState.Idle;       //her islem sonunda idle olarak guncellenir
+    }
+  }
+
+  bool _emailPasswordCheck(String email, String password){
+    var sonuc = true;
+
+    if(password.length < 6){
+      passwordErrorMessage = "En az 6 karakter olmalı";
+      sonuc = false;
+    }
+    else passwordErrorMessage = null;                      //hata yoksa null degeri atanip temizlenmeli
+    
+    if(!email.contains("@")){
+      emailErrorMessage = "Geçersiz email adresi";
+      sonuc = false;
+    }else emailErrorMessage = null;
+    
+    return sonuc;
   }
 
 }
