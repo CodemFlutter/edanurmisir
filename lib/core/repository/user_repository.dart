@@ -12,7 +12,9 @@ class UserRepository implements AuthBase{
 
   @override
   Future<UserModel?> currentUser() async {
-    return await _firebaseAuthService.currentUser();
+    UserModel? _user= await _firebaseAuthService.currentUser();
+    return await _firestoreDbService.readUser(_user!.userID);
+
   }
 
   @override
@@ -31,13 +33,14 @@ class UserRepository implements AuthBase{
     UserModel? _user =await _firebaseAuthService.createUserWithEmailAndPassword(email, password);
     bool _sonuc = await _firestoreDbService.saveUser(_user);
     if(_sonuc){                       //kullanici kaydolduysa kullanici objesini dondur
-      return _user;
+      return await _firestoreDbService.readUser(_user!.userID);
     }else return null;
   }
 
   @override
   Future<UserModel?> signInWithEmailAndPassword(String email, String password) async{       //firebase auth service'ten gelen metotlar
-    return await _firebaseAuthService.signInWithEmailAndPassword(email, password);
+    UserModel? _user =  await _firebaseAuthService.signInWithEmailAndPassword(email, password);
+    return await _firestoreDbService.readUser(_user!.userID);
   }
 
 

@@ -39,12 +39,17 @@ class _SigninPageState extends State<SigninPage> {
     _formKey.currentState!.save();
     debugPrint("email:"+_email!+"Şifre:"+ _password!);
     
-    UserModel? girisYapanUser = await _userViewModel.signInWithEmailAndPassword(_email!, _password!); //viewmodel user model'a cevrildi
-    if(girisYapanUser!=null){
+    return await _userViewModel.signInWithEmailAndPassword(_email!, _password!); //viewmodel user model'a cevrildi
+    
+  /*  if(girisYapanUser!=null){
+      if(girisYapanUser.email == "eda@eda.com"){
+      girisYapanUser.role = "admin";
+
+    }else girisYapanUser.role = "kullanici";
       print("Giris Yapan User Email: "+_email!+"Şifre:"+_password!);
     }else{
 
-    }
+    }*/
   }
 
 

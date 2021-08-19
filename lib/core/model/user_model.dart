@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel{
@@ -6,7 +8,7 @@ class UserModel{
   String? userName;
   String? password;
   String? photoURL;
-  bool? role;
+  String? role;
   String? firstName;
   String? lastName;
   String? gender;
@@ -25,10 +27,10 @@ class UserModel{
     return {
       'userID':userID,
       'email': email,
-      'userName' : userName,
+      'userName' : userName??email!.substring(0,email!.indexOf("@"))+randomSayiUret(),
       'password':password,
       'photoURL':photoURL,
-      'role':email=="edaflutter@gmail.com"?true:false, //userid bu ise true yap
+      'role':email=="eda@eda.com"?"admin":"kullanici", //userid bu ise true yap
       'firstName':firstName,
       'lastName':lastName,
       'gender':gender,
@@ -51,11 +53,21 @@ class UserModel{
   firstName= map["firstName"],
   lastName= map["lastName"],
   gender= map["gender"],
-  birthDate= map["birthDate"],
+  birthDate=map["birthDate"],
   phoneNumber = map["phoneNumber"],
-  isDeleted= map["isDeleted"],
-  deletedAt= map["deletedAt"],
-  createdAt= map["createdAt"],
-  updatedAt= map["updatedAt"];
+  isDeleted= map["isDeleted"];
+  //deletedAt= (map["deletedAt"] as Timestamp).toDate(),
+  //createdAt= (map["createdAt"] as Timestamp).toDate(),
+  //updatedAt= (map["updatedAt"] as Timestamp).toDate();
+
+  @override
+  String toString(){
+    return "User{userName:$userName, email: $email, role:$role}";
+  }
+
+  String randomSayiUret(){
+    int rastgeleSayi = Random().nextInt(999999);
+    return rastgeleSayi.toString();
+  }
 
 }

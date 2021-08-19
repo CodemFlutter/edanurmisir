@@ -22,7 +22,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("ADMİN ${widget.user!.userID},${widget.user!.role}", style:TextStyle(fontSize: 20)), //kullanici bilgisi sayfaya aktarilir
+            Text("ADMİN SAYFASI ${widget.user!.userID},${widget.user!.role}", style:TextStyle(fontSize: 20)), //kullanici bilgisi sayfaya aktarilir
             ElevatedButton(
               onPressed: (){
                 _cikisYap(context);

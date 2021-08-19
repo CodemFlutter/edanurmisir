@@ -10,11 +10,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();    //firebase baslangicta durum kontrolleri icin initialize edilmeli 
   setupLocator();                     //locator (get it paketi) icin baslangic cagrisi
+  
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-
+ 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
