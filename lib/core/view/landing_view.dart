@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopping_list_app/core/view/admin_home_view.dart';
 import 'package:shopping_list_app/core/view/sign_in_view.dart';
 import 'package:shopping_list_app/core/viewmodel/user-view-model.dart';
 import 'home_view.dart';
@@ -19,12 +18,7 @@ class LandingPage extends StatelessWidget {
         return SigninPage();
       }
       else{
-        if( _userViewModel.user!.role =="admin"){
-            return AdminHomePage(user: _userViewModel.user);
-        }   
-        else{
             return HomePage(user: _userViewModel.user);
-        }
       }
     } else{
       return Scaffold(

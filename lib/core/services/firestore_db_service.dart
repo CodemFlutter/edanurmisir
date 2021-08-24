@@ -23,12 +23,24 @@ class FirestoreDbService implements DBase{
 
   @override
   Future<UserModel?> readUser(String userID) async{
-    DocumentSnapshot<Map<String,dynamic>> _okunanUser = await _firebaseDB.collection("users").doc(userID).get();
+    DocumentSnapshot<Map<String,dynamic>> _okunanUser =
+     await _firebaseDB.collection("users").doc(userID).get();
     Map<String,dynamic>? _userInfoMap = _okunanUser.data();
     UserModel _userInfoObject = UserModel.fromMap(_userInfoMap!);
     print("Okunan user nesnesi: "+ _userInfoObject.toString());
     return _userInfoObject;
 
+  }
+
+  @override
+  Future<bool> updateUserName(String userID, String newUserName) async{
+    var users = await _firebaseDB.collection("users").where("userName", isEqualTo: newUserName).get();
+    if(users.docs.length>=1){               //eger boyle bir kullanici varsa false
+      return false;
+    }else{
+      await _firebaseDB.collection("users").doc(userID).update({"userName":newUserName});//yoksa guncel degeri girilen deger
+      return true;
+    }
   }
 
 }

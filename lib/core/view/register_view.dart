@@ -1,8 +1,11 @@
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_list_app/constants/app_buttons.dart';
 import 'package:shopping_list_app/constants/constants.dart';
+import 'package:shopping_list_app/constants/error_exception.dart';
+import 'package:shopping_list_app/constants/ps_alert_dialog.dart';
 import 'package:shopping_list_app/core/model/user_model.dart';
 import 'package:shopping_list_app/core/viewmodel/user-view-model.dart';
 
@@ -18,6 +21,11 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   static GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
+  @override
+  void initState() {
+    super.initState();
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +40,19 @@ class _RegisterPageState extends State<RegisterPage> {
   _formSubmit() async {
     _formKey.currentState!.save();
     debugPrint("email:"+_email!+"Şifre:"+ _password!);
-    UserModel? kaydolanUser = await _userViewModel.createUserWithEmailAndPassword(_email!, _password!); //viewmodel user model'a cevrildi
-    if(kaydolanUser!=null){
-      print("Kaydolan User Email: "+_email!+"Şifre:"+_password!);
-    }else{
 
+
+     try{  
+    UserModel? _kaydolanUser = await _userViewModel.createUserWithEmailAndPassword(_email!, _password!); //viewmodel user model'a cevrildi
+    if(_kaydolanUser!=null){
+      print("Kaydolan user id: "+_kaydolanUser.userID);
+    }
+    }on FirebaseAuthException catch(e){
+      PsAlertDialog(
+        mainButton: "Tamam",
+        title: "Giriş Hatası",
+        message: ErrorAlert.showMessage(e.code).toString(),
+      ).goster(context);
     }
   }
 

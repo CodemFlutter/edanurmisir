@@ -7,7 +7,7 @@ class UserModel{
   String? email;
   String? userName;
   String? password;
-  String? photoURL;
+  String photoURL="https://firebasestorage.googleapis.com/v0/b/shopping-list-edb.appspot.com/o/ppicture.png?alt=media&token=a66bb78b-d287-4841-9a4c-4f62c2670bc3";
   String? role;
   String? firstName;
   String? lastName;
@@ -20,7 +20,6 @@ class UserModel{
   DateTime? updatedAt;
   
 
-
   UserModel({required this.userID, required this.email});
 
   Map<String,dynamic> toMap(){
@@ -29,7 +28,7 @@ class UserModel{
       'email': email,
       'userName' : userName??email!.substring(0,email!.indexOf("@"))+randomSayiUret(),
       'password':password,
-      'photoURL':photoURL,
+      'photoURL':"https://firebasestorage.googleapis.com/v0/b/shopping-list-edb.appspot.com/o/ppicture.png?alt=media&token=a66bb78b-d287-4841-9a4c-4f62c2670bc3",
       'role':email=="eda@eda.com"?"admin":"kullanici", //userid bu ise true yap
       'firstName':firstName,
       'lastName':lastName,

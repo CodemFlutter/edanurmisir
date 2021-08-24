@@ -1,8 +1,12 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_list_app/constants/app_buttons.dart';
 import 'package:shopping_list_app/constants/constants.dart';
+import 'package:shopping_list_app/constants/error_exception.dart';
+import 'package:shopping_list_app/constants/ps_alert_dialog.dart';
 import 'package:shopping_list_app/core/model/user_model.dart';
 import 'package:shopping_list_app/core/view/register_view.dart';
 import 'package:shopping_list_app/core/viewmodel/user-view-model.dart';
@@ -23,7 +27,12 @@ class SigninPage extends StatefulWidget {
 
 class _SigninPageState extends State<SigninPage> {
   static GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  
+
+  @override
+  void initState() {
+    super.initState();
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,18 +47,28 @@ class _SigninPageState extends State<SigninPage> {
   _formSubmit() async{
     _formKey.currentState!.save();
     debugPrint("email:"+_email!+"Şifre:"+ _password!);
-    
-    return await _userViewModel.signInWithEmailAndPassword(_email!, _password!); //viewmodel user model'a cevrildi
-    
-  /*  if(girisYapanUser!=null){
-      if(girisYapanUser.email == "eda@eda.com"){
-      girisYapanUser.role = "admin";
+ 
+    try{
+         
+    UserModel? _girisYapanUser = await _userViewModel.signInWithEmailAndPassword(_email!, _password!); //viewmodel user model'a cevrildi
+    if(_girisYapanUser!=null){
+      print("Oturum açan user id: "+_girisYapanUser.userID);
+    }
+    }on FirebaseAuthException catch(e){
+      print("HATA: "+ e.code.toString());
+   /*  PsAlertDialog(
+        mainButton: "Tamam",
+        title: "Kullanıcı girişinde hata",
+        message: ErrorAlert.showMessage(e.message!),
+        ).goster(context);*/
 
-    }else girisYapanUser.role = "kullanici";
-      print("Giris Yapan User Email: "+_email!+"Şifre:"+_password!);
-    }else{
+         PsAlertDialog(
+        mainButton: "Tamam",
+        title: "Giriş Hatası",
+        message: ErrorAlert.showMessage(e.code).toString(),
+      ).goster(context);
+    }
 
-    }*/
   }
 
 
@@ -165,7 +184,6 @@ class _SigninPageState extends State<SigninPage> {
                     ),
                     ),
                   )
-  
             ],
           ),
         ),

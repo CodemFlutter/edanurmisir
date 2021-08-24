@@ -34,9 +34,6 @@ class UserViewModel with ChangeNotifier implements AuthBase{   //mixin
       state = ViewState.Busy;
       _user = await _userRepository.currentUser();
       return _user;
-    }catch(e){
-      debugPrint("Kullanici alinamadi"+ e.toString());
-      return null;
     }finally{
       state = ViewState.Idle;       //her islem sonunda idle olarak guncellenir
     }
@@ -48,9 +45,6 @@ class UserViewModel with ChangeNotifier implements AuthBase{   //mixin
       state = ViewState.Busy;
       _user = await _userRepository.signInAnonymously();
       return _user;
-    }catch(e){
-      debugPrint("Kullanici girisi yapilamadi"+ e.toString());
-      return null;
     }finally{
       state = ViewState.Idle;       //her islem sonunda idle olarak guncellenir
     }
@@ -63,9 +57,6 @@ class UserViewModel with ChangeNotifier implements AuthBase{   //mixin
       bool sonuc = await _userRepository.signOut();
       _user = null;                                       //cikis yapince user null olmali
       return sonuc;
-    }catch(e){
-      debugPrint("Kullanici alinamadi"+ e.toString());
-      return false;
     }finally{
       state = ViewState.Idle;       //her islem sonunda idle olarak guncellenir
     }
@@ -82,10 +73,6 @@ class UserViewModel with ChangeNotifier implements AuthBase{   //mixin
       }else {
         return null;
       }
-
-    }catch(e){
-      debugPrint("Kullanici alinamadi"+ e.toString());
-      return null;
     }finally{
       state = ViewState.Idle;       //her islem sonunda idle olarak guncellenir
     }
@@ -96,13 +83,10 @@ class UserViewModel with ChangeNotifier implements AuthBase{   //mixin
     try{
 
       if(_emailPasswordCheck(email, password)){
-        state = ViewState.Busy;
+       // state = ViewState.Busy;  
         _user = await _userRepository.signInWithEmailAndPassword(email, password);
         return _user;
       }else return null;
-    }catch(e){
-      debugPrint("Kullanici alinamadi"+ e.toString());
-      return null;
     }finally{
       state = ViewState.Idle;       //her islem sonunda idle olarak guncellenir
     }
@@ -123,6 +107,15 @@ class UserViewModel with ChangeNotifier implements AuthBase{   //mixin
     }else emailErrorMessage = null;
     
     return sonuc;
+  }
+
+  Future<bool> updateUserName(String userID,String newUserName) async {
+
+    var _sonuc = await _userRepository.updateUserName(userID,newUserName);
+    if(_sonuc){
+       _user!.userName = newUserName;
+    }
+    return _sonuc;
   }
 
 }

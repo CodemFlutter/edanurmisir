@@ -12,9 +12,12 @@ void main() async {
   setupLocator();                     //locator (get it paketi) icin baslangic cagrisi
   
   runApp(MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
+
+  
  
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: pMain,
         ),
-          home: LandingPage(),         
+          home: LandingPage(),  
+                 
       ),
     );
   }

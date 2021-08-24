@@ -12,19 +12,18 @@ class FirebaseAuthService implements AuthBase{
   Future<UserModel?> currentUser() async {
 
     try{
-      User user = _firebaseAuth.currentUser!;
+      User? user = _firebaseAuth.currentUser!;
      return _userFromFirebase(user);
     }catch(e){
-      print("HATA CURRENT USER!"+e.toString());
-      return null;
     }
      
   }
 
   UserModel? _userFromFirebase(User? user){
-    if(user == null)                      //firebase'den gelen user null ise 
-      return null;                        //usermodel'daki user'i da null'a esitle
+    if(user == null){return null; }                      //firebase'den gelen user null ise 
+      else{                                           //usermodel'daki user'i da null'a esitle
     return UserModel(userID: user.uid,email: user.email);   //null degilse usermodel'daki user'a gelen degeri ata
+      }
   }
 
   @override
@@ -52,24 +51,17 @@ class FirebaseAuthService implements AuthBase{
 
   @override
   Future<UserModel?> createUserWithEmailAndPassword(String email, String password) async {
-    try{
+    
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
       return _userFromFirebase(userCredential.user);
-    }catch(e){
-      print("CREATE USER ERROR:"+e.toString());
-      return null;
-    }
+
   }
 
   @override
   Future<UserModel?> signInWithEmailAndPassword(String email, String password) async {
-    try{
+
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
       return _userFromFirebase(userCredential.user);
-    }catch(e){
-      print("USER SIGN IN ERROR:"+e.toString());
-      return null;
-    }
   }
     
   }
