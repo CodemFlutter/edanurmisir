@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_list_app/constants/app_buttons.dart';
 import 'package:shopping_list_app/constants/constants.dart';
@@ -16,7 +19,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   TextEditingController? _userNameController;
-
+  File? _profilePhoto;
 
 
 
@@ -28,7 +31,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    UserViewModel? _userViewModel = Provider.of<UserViewModel>(context);
+     var screenInfo = MediaQuery.of(context);
+    final double h = screenInfo.size.height;
+    UserViewModel? _userViewModel = Provider.of<UserViewModel>(context,listen:false);
     _userNameController!.text= _userViewModel.user!.userName!;
     return Scaffold(
       body:SingleChildScrollView(
@@ -37,10 +42,43 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: CircleAvatar(
-                  radius:75,
-                  backgroundColor: background,
-                  backgroundImage: NetworkImage(_userViewModel.user!.photoURL)),
+                child: GestureDetector(
+                  onTap:(){
+                    showModalBottomSheet(
+                      context: context, 
+                      builder:(context){
+                        return Container(
+                          height:h/5,
+                          child: Column(
+                            children: [
+                                ListTile(
+                                  leading: Icon(Icons.camera),
+                                  title:Text("Kamera ile çek"),
+                                  onTap: (){
+                                    _takeFromCamera();
+                                  },
+                                ),
+                                ListTile(
+                                  leading: Icon(Icons.image),
+                                  title:Text("Galeriden seç"),
+                                  onTap: (){
+                                    _selectFromGallery();
+                                  },
+                                ),
+
+                            ],
+                            ),
+                        );
+                      }
+                      );
+                  },
+                  child: CircleAvatar(
+                    radius:75,
+                    backgroundColor: background,
+                    backgroundImage: imageProvider(_userViewModel)
+                    
+                    ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -84,6 +122,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 textSize: 15,
                 onPressed:(){
                   _userNameGuncelle(context);
+                  _updateProfilePhoto(context);
+                  
                 } ,
                 )
             ],
@@ -97,20 +137,57 @@ class _ProfilePageState extends State<ProfilePage> {
     if(_userViewModel.user!.userName!= _userNameController!.text){
        var _updateResult = await _userViewModel.updateUserName(_userViewModel.user!.userID,_userNameController!.text);
        if(_updateResult == true){
-         PsAlertDialog(title: "Güncelleme İşlemi", message: "Kullanıcı adınız güncellenmiştir.", mainButton: "Tamam").goster(context);
+         PsAlertDialog(title: "Güncelleme İşlemi", 
+                      message: "Kullanıcı adınız güncellenmiştir.", 
+                      mainButton: "Tamam").goster(context);
 
        }else{
          _userNameController!.text = _userViewModel.user!.userName!;      //eger kullanimdaysa eski username textfielda tekrar yazilmali
-          PsAlertDialog(title: "Güncelleme İşlemi", message: "Kullanıcı adı zaten kullanımda, lütfen farklı bir kullanıcı adı deneyiniz.", mainButton: "Tamam").goster(context);
+          PsAlertDialog(title: "Güncelleme İşlemi", 
+          message: "Kullanıcı adı zaten kullanımda, lütfen farklı bir kullanıcı adı deneyiniz.", mainButton: "Tamam").goster(context);
        }
     }
-    else{
-      PsAlertDialog(
-        title:"UYARI",
-        message:"Kullanıcı Adınızda Hiçbir Değişiklik Yapılmadı",
-        mainButton: "Onayla",
-      ).goster(context);
+  }
+
+  void _updateProfilePhoto(BuildContext context) async {
+    final _userViewModel = Provider.of<UserViewModel>(context,listen:false);
+    if(_profilePhoto!=null){    //eger null degilse degisiklik yapilmistir
+      String url = await _userViewModel.uploadFile(_userViewModel.user!.userID,"profil_foto",_profilePhoto);
+      print("eklenen url: "+ url);
+      if(url!=null){
+       ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text("Profil güncellendi"),
+              duration: Duration(milliseconds: 1200)),
+        );
+    }
     }
 
   }
+
+  void _takeFromCamera() async{
+    PickedFile? _newPhoto =  await ImagePicker.platform.pickImage(source: ImageSource.camera);
+    
+    Navigator.of(context).pop();
+    setState(() {
+      _profilePhoto = File(_newPhoto!.path);
+    });
+  }
+
+  void _selectFromGallery() async{
+    var _newPhoto = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    Navigator.of(context).pop();
+    setState(() {
+      _profilePhoto = File(_newPhoto!.path);
+    });
+  }
+
+  ImageProvider imageProvider(UserViewModel _userViewModel) {
+    if (_profilePhoto == null) {
+      return NetworkImage(_userViewModel.user!.photoURL);
+    } else {
+      return FileImage(_profilePhoto!);
+    }
+  }
+
 }

@@ -4,5 +4,6 @@ abstract class DBase {
   Future<bool> saveUser(UserModel user);    //kullanicinin kaydolma durumunu kontrol eder
  Future<UserModel?> readUser(String userID);  
  Future<bool> updateUserName(String userID,String newUserName);
+ Future<bool> updateProfilePhoto(String userID,String profilePhotoURL);
 
 }

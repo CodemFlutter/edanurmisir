@@ -1,7 +1,9 @@
 //NETWORK(MODELLER) VE UI ARASINDAKİ KATMAN. KULLANILACAK SERVISE KARAR VERILIR
+import 'dart:io';
 import 'package:shopping_list_app/core/locator.dart';
 import 'package:shopping_list_app/core/model/user_model.dart';
 import 'package:shopping_list_app/core/services/auth_base.dart';
+import 'package:shopping_list_app/core/services/fb_storage_service.dart';
 import 'package:shopping_list_app/core/services/firebase_auth_service.dart';
 import 'package:shopping_list_app/core/services/firestore_db_service.dart';
 
@@ -9,6 +11,7 @@ import 'package:shopping_list_app/core/services/firestore_db_service.dart';
 class UserRepository implements AuthBase{
   FirebaseAuthService _firebaseAuthService = locator<FirebaseAuthService>();  //repo alinacak servis belirlendi
   FirestoreDbService _firestoreDbService = locator<FirestoreDbService>();
+  FirebaseStorageService _fbStorageService = locator<FirebaseStorageService>();
 
   @override
   Future<UserModel?> currentUser() async {
@@ -50,7 +53,9 @@ class UserRepository implements AuthBase{
     return await _firestoreDbService.updateUserName(userID, newUserName);
   }
 
-
-
-
+  Future<String> uploadFile(String userID, String fileType, File? profilePhoto) async {
+    var profilePhotoURL =  await _fbStorageService.uploadFile(userID, fileType, profilePhoto );
+    await _firestoreDbService.updateProfilePhoto(userID,profilePhotoURL);
+    return profilePhotoURL;
+  }
 }

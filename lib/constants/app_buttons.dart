@@ -7,6 +7,7 @@ class AppButtons extends StatelessWidget {
    final double textSize;
    final Color textColor;
    final VoidCallback onPressed;
+  
 
    const AppButtons(
      {required this.buttonText,
@@ -19,15 +20,13 @@ class AppButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
+    
             onPressed:onPressed,
             style: ElevatedButton.styleFrom(
             primary: buttonColor,
             shape: StadiumBorder() 
             ),
-            child: Padding(
-            padding: const EdgeInsets.all(10.0),
             child: Text(buttonText,style:TextStyle(fontSize:20)),
-            ),
     );
   }
 }

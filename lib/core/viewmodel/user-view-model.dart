@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_list_app/core/locator.dart';
@@ -21,7 +23,7 @@ class UserViewModel with ChangeNotifier implements AuthBase{   //mixin
 
   set state(ViewState value){
     _state = value;
-    notifyListeners();        //state degisince aayuze bilgi verilir
+    notifyListeners();        //state degisince aayuze bilgi verilir,tetikleme islemi
   }
 
   UserViewModel(){
@@ -116,6 +118,11 @@ class UserViewModel with ChangeNotifier implements AuthBase{   //mixin
        _user!.userName = newUserName;
     }
     return _sonuc;
+  }
+
+  Future<String> uploadFile(String userID, String fileType, File? profilePhoto) async {
+    var downloadLink = await _userRepository.uploadFile(userID,fileType,profilePhoto);
+    return downloadLink;
   }
 
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_list_app/constants/constants.dart';
+import 'package:shopping_list_app/constants/textfieldDialog.dart';
 import 'package:shopping_list_app/constants/ps_alert_dialog.dart';
 import 'package:shopping_list_app/core/model/user_model.dart';
 import 'package:shopping_list_app/core/view/profile_view.dart';
@@ -27,6 +28,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var screenInfo = MediaQuery.of(context);
+    final double h = screenInfo.size.height;
+  final double w = screenInfo.size.width;
      var drawerList = <Widget>[ShoppingPage(user:widget.user),
       ProfilePage(user: widget.user),
       UsersListPage(),CategoryListPage()];  //kisinin kategorilerini icerir
@@ -46,9 +50,10 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ClipRRect(child: Image.asset("images/ppicture.png",height:70,width:70),
-                          borderRadius: BorderRadius.circular(8.0),),
-                    Text("${widget.user!.email}",style:TextStyle(color:background)),
+                    SizedBox(
+                      height:70,width:70,
+                      child: CircleAvatar(backgroundImage: NetworkImage(widget.user!.photoURL),)),
+                    Text("${widget.user!.userName}",style:TextStyle(color:background)),
 
                   ],
                 ),
@@ -99,53 +104,9 @@ class _HomePageState extends State<HomePage> {
                         barrierDismissible: false, // user must tap button!
                         builder: (BuildContext context) {
                             return Container(
-                              width:400,
-                              height:300,
-                              child: Dialog(
-                                backgroundColor: background,
-                                shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                
-                                 ),
-                                child: Container(
-                                  
-                                  height:300,
-                                  width:500,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                         children: [
-                                           Text('Grup Ekle',style:TextStyle(fontSize: 25,fontWeight: FontWeight.bold),textAlign:TextAlign.left),
-                                             SizedBox(
-                                               height:40,
-                                               width:230,
-                                               child: TextField( 
-                                               decoration: InputDecoration( 
-                                               labelText: "Grup Adı",
-                                            filled: true, 
-                                               fillColor: Colors.white,  
-                                               border: OutlineInputBorder(   
-                                                borderRadius: BorderRadius.all(Radius.circular(40.0)))
-                                           )
-                                         ),
-                                             ),
-                                         Row(
-                                           
-                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                           children: [
-                                           ElevatedButton(onPressed:(){Navigator.pop(context);}, child: Text("İptal")),
-                                           ElevatedButton(
-                                             onPressed:(){
-                                            // Navigator.push(context, MaterialPageRoute(builder:(context)=>HomePage()));
-                                        
-                                             }, 
-                                             child: Text("Tamam")),
-                                        
-                                         ],)
-                                         ],
-                                                ),
-                                ),
-       
-                              ),
+                              width:h/3,
+                              height:w-40,
+                              child: TextFieldDialog(h: h, w: w),
                             );
                           },
                         );
@@ -231,3 +192,4 @@ class _HomePageState extends State<HomePage> {
   
 
 }
+

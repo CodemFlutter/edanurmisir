@@ -42,5 +42,12 @@ class FirestoreDbService implements DBase{
       return true;
     }
   }
-
+  
+  
+  Future<bool> updateProfilePhoto(String userID, String profilePhotoURL) async {
+      await _firebaseDB.collection("users")
+      .doc(userID)
+      .update({"photoURL":profilePhotoURL});//yoksa guncel degeri girilen deger
+      return true;
+  }
 }

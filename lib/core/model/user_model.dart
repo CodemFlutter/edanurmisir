@@ -7,7 +7,7 @@ class UserModel{
   String? email;
   String? userName;
   String? password;
-  String photoURL="https://firebasestorage.googleapis.com/v0/b/shopping-list-edb.appspot.com/o/ppicture.png?alt=media&token=a66bb78b-d287-4841-9a4c-4f62c2670bc3";
+  late String photoURL;
   String? role;
   String? firstName;
   String? lastName;
