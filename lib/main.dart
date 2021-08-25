@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         title: 'Shopping List App',
         theme: ThemeData(
           primaryColor: pMain,
-          primarySwatch: Colors.purple
+          primarySwatch: Colors.deepPurple
         ),
           home: LandingPage(),  
                  

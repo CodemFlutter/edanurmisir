@@ -125,4 +125,10 @@ class UserViewModel with ChangeNotifier implements AuthBase{   //mixin
     return downloadLink;
   }
 
+  Future<List<UserModel>> getAllUsers() async {
+    var allUsersList = await _userRepository.getAllUsers();
+    return allUsersList;
+  }
+
+
 }

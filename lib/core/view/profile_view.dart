@@ -36,6 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
     UserViewModel? _userViewModel = Provider.of<UserViewModel>(context,listen:false);
     _userNameController!.text= _userViewModel.user!.userName!;
     return Scaffold(
+      appBar: AppBar(title: Text("Profil Sayfası"),),
       body:SingleChildScrollView(
         child:Center(
           child:Column(

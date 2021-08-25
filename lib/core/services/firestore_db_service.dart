@@ -50,4 +50,17 @@ class FirestoreDbService implements DBase{
       .update({"photoURL":profilePhotoURL});//yoksa guncel degeri girilen deger
       return true;
   }
+
+  @override
+  Future<List<UserModel>> getAllUsers() async{
+    QuerySnapshot<Map<String,dynamic>> querySnapShot= await _firebaseDB.collection("users").get();  //users tablosundaki tum dokumanlar
+
+    List<UserModel> allUsers = [];
+    for(QueryDocumentSnapshot<Map<String,dynamic>> oneUser in querySnapShot.docs){        //verilen dokumanlardan sorgunun dokumanlari
+        UserModel _oneUser = UserModel.fromMap(oneUser.data());                           //alinan veriler objeye donusturuldu
+        allUsers.add(_oneUser);                                                 
+    }
+    //allUsers = querySnapShot.docs.map((tekSatir)=>UserModel.fromMap(tekSatir.data())).toList();   //for dongusu ile ayni islevde
+    return allUsers;
+  }
 }

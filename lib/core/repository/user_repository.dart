@@ -58,4 +58,10 @@ class UserRepository implements AuthBase{
     await _firestoreDbService.updateProfilePhoto(userID,profilePhotoURL);
     return profilePhotoURL;
   }
+
+  Future<List<UserModel>> getAllUsers() async{
+    var allUsersList = await _firestoreDbService.getAllUsers();
+    return allUsersList;
+
+  }
 }

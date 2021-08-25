@@ -82,9 +82,9 @@ class _HomePageState extends State<HomePage> {
                 title: Text("Profilim",style:TextStyle(fontSize: 15)),
                  onTap: (){
                    setState(() {
-                     secilenIndeks = 1;
+                     
                      Navigator.pop(context);
-                    // Navigator.push(context,MaterialPageRoute(builder: (context)=>ProfilePage(user: widget.user)));
+                     Navigator.push(context,MaterialPageRoute(builder: (context)=>ProfilePage(user: widget.user)));
                    });
                  },
                 
@@ -134,8 +134,8 @@ class _HomePageState extends State<HomePage> {
                    title: Text("Kullanıcı Listesi",style:TextStyle(fontSize: 15)),
                    onTap: (){
                      setState(() {
-                       secilenIndeks = 2;
-                       Navigator. pop(context) ;
+                       Navigator.pop(context);
+                     Navigator.push(context,MaterialPageRoute(builder: (context)=>UsersListPage()));
                      });
               
                    },
