@@ -130,5 +130,10 @@ class UserViewModel with ChangeNotifier implements AuthBase{   //mixin
     return allUsersList;
   }
 
+  Future<void> createNames (String userID,String? firstName, String? lastName) async {
+    await _userRepository.createNames(userID,firstName!, lastName);
+
+  }
+
 
 }

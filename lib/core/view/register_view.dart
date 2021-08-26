@@ -34,18 +34,23 @@ class _RegisterPageState extends State<RegisterPage> {
   final double w = screenInfo.size.width;
   String? _email;
   String? _password;
+  String? _firstName;
+  String? _lastName;
   final _userViewModel = Provider.of<UserViewModel>(context,listen:false);
   
 
   _formSubmit() async {
     _formKey.currentState!.save();
-    debugPrint("email:"+_email!+"Şifre:"+ _password!);
+    debugPrint("email:"+_email!+"Şifre:"+ _password!+"Ad:"+_firstName!);
 
 
      try{  
     UserModel? _kaydolanUser = await _userViewModel.createUserWithEmailAndPassword(_email!, _password!); //viewmodel user model'a cevrildi
+    await _userViewModel.createNames(_kaydolanUser!.userID,_firstName, _lastName);
+    _kaydolanUser.firstName = _firstName;
+    _kaydolanUser.lastName = _lastName;
     if(_kaydolanUser!=null){
-      print("Kaydolan user id: "+_kaydolanUser.userID);
+      print("Kaydolan user id: "+_kaydolanUser.userID+ "first name : "+ (_kaydolanUser.firstName).toString());
     }
     }on FirebaseAuthException catch(e){
       PsAlertDialog(
@@ -81,7 +86,57 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Text("Üyelik Formu",style:TextStyle(fontSize: 36)),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top:h/10.0, bottom:h/30,left:w/10,right:w/10),
+                  padding: EdgeInsets.only(top:h/15, bottom:h/55,left:w/10,right:w/10),
+                  child: TextFormField(
+                      onSaved: (String? aval){
+                        _firstName = aval;
+                      },
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration( 
+                      prefixIcon: Icon(Icons.person_add),
+                      hintText: "Ad Giriniz",
+                      filled: true, 
+                      fillColor: Colors.white,
+                      focusedBorder: OutlineInputBorder(//textfield tiklaninca
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        borderSide: BorderSide(width: 1.5,color: pDarkest),
+                     ),
+                      border: OutlineInputBorder(  //textfield tiklanmamisken 
+                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                        borderSide: new BorderSide(
+                        color: pDarkest,
+                        )
+                      )
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top:h/55, bottom:h/55,left:w/10,right:w/10),
+                  child: TextFormField(
+                      onSaved: (String? sval){
+                        _lastName = sval;
+                      },
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration( 
+                      prefixIcon: Icon(Icons.person_add),
+                      hintText: "Soyad Giriniz",
+                      filled: true, 
+                      fillColor: Colors.white,
+                      focusedBorder: OutlineInputBorder(//textfield tiklaninca
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        borderSide: BorderSide(width: 1.5,color: pDarkest),
+                     ),
+                      border: OutlineInputBorder(  //textfield tiklanmamisken 
+                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                        borderSide: new BorderSide(
+                        color: pDarkest,
+                        )
+                      )
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top:h/55, bottom:h/55,left:w/10,right:w/10),
                   child: TextFormField(
                       onSaved: (String? eval){
                         _email = eval;
@@ -109,14 +164,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
 
                 Padding(
-                  padding: EdgeInsets.only(bottom:h/10.0, top:h/40,left:w/10,right:w/10),
+                  padding: EdgeInsets.only(bottom:h/30, top:h/55,left:w/10,right:w/10),
                   child: TextFormField( 
                     obscureText: true, 
                     onSaved: (String? pval){
                         _password = pval;
                       },
                     decoration: InputDecoration( 
-                      prefixIcon: Icon(Icons.password),
+                      prefixIcon: Icon(Icons.vpn_key),
                       hintText: "Şifre",
                       errorText: _userViewModel.passwordErrorMessage != null ? _userViewModel.passwordErrorMessage: null, 
                       filled: true,  

@@ -16,7 +16,6 @@ class UserRepository implements AuthBase{
   @override
   Future<UserModel?> currentUser() async {
     UserModel? _user= await _firebaseAuthService.currentUser();    //authservide'ten mevcut kullanici alinir
-    
     return await _firestoreDbService.readUser(_user!.userID);     //mevcut kullanici bilgileri authservide yerine db'den okunur
    
 
@@ -31,12 +30,13 @@ class UserRepository implements AuthBase{
   Future<bool> signOut() async {
     return await _firebaseAuthService.signOut();
   }
-
+ 
   @override
   Future<UserModel?> createUserWithEmailAndPassword(String email, String password) async {
     
     UserModel? _user =await _firebaseAuthService.createUserWithEmailAndPassword(email, password);
     bool _sonuc = await _firestoreDbService.saveUser(_user);
+
     if(_sonuc){                       //kullanici kaydolduysa kullanici objesini dondur
       return await _firestoreDbService.readUser(_user!.userID);
     }else return null;
@@ -63,5 +63,10 @@ class UserRepository implements AuthBase{
     var allUsersList = await _firestoreDbService.getAllUsers();
     return allUsersList;
 
+  }
+
+  Future<String?> createNames(String userID, String? firstName, String? lastName) async {
+    await _firestoreDbService.createNames(userID, firstName, lastName);
+    return firstName;
   }
 }

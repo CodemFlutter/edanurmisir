@@ -12,6 +12,7 @@ class FirestoreDbService implements DBase{
     
     DocumentSnapshot<Map<String,dynamic>> _okunanUser =
       await _firebaseDB.doc("users/${user.userID}").get();//tablodan alinan bilgiler aktariliyor
+     
 
     Map<String, dynamic>? _userInfoMap = _okunanUser.data();//map turunde degiskene ataniyor
     UserModel _userInfoObject = UserModel.fromMap(_userInfoMap!);//mapteki degiskenler obje haline getiriliyor
@@ -62,5 +63,15 @@ class FirestoreDbService implements DBase{
     }
     //allUsers = querySnapShot.docs.map((tekSatir)=>UserModel.fromMap(tekSatir.data())).toList();   //for dongusu ile ayni islevde
     return allUsers;
+  }
+
+  Future<bool> createNames(String userID, String? firstName, String? lastName) async {
+      await _firebaseDB.collection("users")
+      .doc(userID)
+      .update({
+        "firstName":firstName,
+        "lastName":lastName,
+      });//yoksa guncel degeri girilen deger
+      return true;
   }
 }

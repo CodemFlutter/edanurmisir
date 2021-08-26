@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopping_list_app/constants/app_buttons.dart';
 import 'package:shopping_list_app/core/model/user_model.dart';
 import 'package:shopping_list_app/core/view/profile_view.dart';
 import 'package:shopping_list_app/core/viewmodel/user-view-model.dart';

@@ -5,6 +5,7 @@ abstract class DBase {
  Future<UserModel?> readUser(String userID);  
  Future<bool> updateUserName(String userID,String newUserName);
  Future<bool> updateProfilePhoto(String userID,String profilePhotoURL);
+ Future<bool> createNames(String userID, String? firstName, String? lastName);
  Future<List<UserModel>> getAllUsers();
 
 
