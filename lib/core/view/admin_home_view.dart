@@ -16,15 +16,15 @@ import 'category_list_view.dart';
 
 
 // OTURUM ACMIS KULLANICILARIN GORECEGI SAYFA
-class HomePage extends StatefulWidget {
+class AdminHomePage extends StatefulWidget {
   final UserModel? user;
-  HomePage({ Key? key , required this.user}) : super(key: key);
+  AdminHomePage({ Key? key , required this.user}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _AdminHomePageState createState() => _AdminHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _AdminHomePageState extends State<AdminHomePage> {
 
   TabItem _currentTab = TabItem.Personal;    //baslangicta kisisel liste gosterilecek
   Map<TabItem, Widget> allPages(BuildContext context){                          //parametre olarak gonderilecek
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
 
               ListTile( //aile grubunun oldugu listelere gider. yalniz giris yapilmissa erisilir
                 
-                leading: Icon(Icons.person, color:pDarkest),
+                leading: Icon(Icons.library_books, color:pDarkest),
                 title: Text("Profilim",style:TextStyle(fontSize: 15)),
                  onTap: (){
                    setState(() {
@@ -128,7 +128,34 @@ class _HomePageState extends State<HomePage> {
                  },
                 
               ),
+              Visibility(
+                visible:widget.user!.role=="admin"?true:false,
+                child: ListTile( //kisisel listeye gider. login yapmadan da erisilebilir
+                  leading: Icon(Icons.list_alt_rounded, color:pDarkest),
+                   title: Text("Kullanıcı Listesi",style:TextStyle(fontSize: 15)),
+                   onTap: (){
+                     setState(() {
+                       Navigator.pop(context);
+                     Navigator.push(context,MaterialPageRoute(builder: (context)=>UsersListPage()));
+                     });
               
+                   },
+                  ),
+              ),
+                Visibility(
+                  visible:widget.user!.role=="admin"?true:false,
+                  child: ListTile( //kisisel listeye gider. login yapmadan da erisilebilir
+                  leading: Icon(Icons.list_alt_rounded, color:pDarkest),
+                   title: Text("Kategori Listesi",style:TextStyle(fontSize: 15)),
+                   onTap: (){
+                     setState(() {
+                       Navigator.push(context,MaterialPageRoute(builder: (context)=>CategoryListPage()));
+                       Navigator. pop(context) ;
+                     });
+                
+                   },
+                  ),
+                ),
             ],
           ),
         )
@@ -136,6 +163,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
   
+
+  AppBar buildAppBar(int sIndeks) {
+    return AppBar(
+      
+      elevation: 0,
+      title:(sIndeks==0)?Text("Alışveriş Listelerim"):Text(" "),
+  );
+  
+  }
 
   Future<bool> _cikisYap(BuildContext context) async {
     final _userViewModel = Provider.of<UserViewModel>(context, listen:false);

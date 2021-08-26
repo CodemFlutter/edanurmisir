@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopping_list_app/core/view/admin_home_view.dart';
+import 'package:shopping_list_app/core/view/home_view.dart';
 import 'package:shopping_list_app/core/view/sign_in_view.dart';
 import 'package:shopping_list_app/core/viewmodel/user-view-model.dart';
-import 'home_view.dart';
 
-
-/*UYGULAMA ILK ACILDIGINDA GORUNTULENECEK SAYFA*/
 
 class LandingPage extends StatelessWidget {
 
@@ -18,7 +17,9 @@ class LandingPage extends StatelessWidget {
         return SigninPage();
       }
       else{
-            return HomePage(user: _userViewModel.user);
+            return _userViewModel.user!.role=="admin" ? 
+            AdminHomePage(user: _userViewModel.user):
+            HomePage(user:_userViewModel.user);
       }
     } else{
       return Scaffold(
@@ -30,14 +31,3 @@ class LandingPage extends StatelessWidget {
 
   }
 }
-
-
-
-
-
-
-
-
-
-
-
